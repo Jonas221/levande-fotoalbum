@@ -376,7 +376,7 @@ export default function ViewerApp() {
       return;
     }
     const photo = photos[selectedIndex];
-    const text = photo.description || photo.ai_description || "";
+    const text = photo.ai_description || photo.description || "";
     if (!text) return;
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = "sv-SE";
@@ -450,7 +450,7 @@ export default function ViewerApp() {
                 : <div style={{ width: "100%", aspectRatio: "4/3", background: "#2a2010", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>📷</div>
               }
               <div className="gallery-card-label">
-                {photo.description || photo.ai_description || photo.filename}
+                {photo.ai_description || photo.description || photo.filename}
                 {photo.year && <div className="gallery-card-year">{photo.year}</div>}
               </div>
             </div>
@@ -474,7 +474,7 @@ export default function ViewerApp() {
 
           <div className="viewer-bottom">
             <div className="viewer-description">
-              {selectedPhoto.description || selectedPhoto.ai_description || "Ingen beskrivning"}
+              {selectedPhoto.ai_description || selectedPhoto.description || "Ingen beskrivning"}
             </div>
             {(selectedPhoto.location || selectedPhoto.year) && (
               <div className="viewer-meta">
