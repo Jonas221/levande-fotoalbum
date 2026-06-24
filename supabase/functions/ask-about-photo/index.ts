@@ -45,7 +45,7 @@ serve(async (req) => {
     const prompt = `Du är en varm och hjälpsam assistent i ett minnesalbum för äldre. 
 En användare tittar på ett foto och har ställt följande fråga: "${question}"
 
-Svara på svenska, kort och tydligt (max 2-3 meningar). Tala direkt till användaren på ett varmt och enkelt sätt. Använd den kända informationen om bilden om det hjälper svaret.${contextText}`;
+Svara på svenska, kort och tydligt (max 2-3 meningar). Tala direkt till användaren på ett varmt och enkelt sätt. Använd den kända informationen om bilden om det hjälper svaret. Använd ALDRIG markdown-formatering som ** eller * och använd INGA emojis — svaret ska läsas upp som tal.${contextText}`;
 
     const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",

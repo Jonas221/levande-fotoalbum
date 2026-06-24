@@ -468,17 +468,22 @@ export default function ViewerApp() {
     setSpeaking(true);
   };
 
-  const speakAnswer = (text) => {
-    synthRef.current?.cancel();
-    setSpeaking(false);
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = "sv-SE";
-    utt.rate = 0.9;
-    utt.pitch = 1.0;
-    utt.onend = () => {};
-    utt.onerror = () => {};
-    synthRef.current?.speak(utt);
-  };
+const speakAnswer = (text) => {
+  synthRef.current?.cancel();
+  setSpeaking(false);
+  // Strippa markdown och emojis
+  const clean = text
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/[^\p{L}\p{N}\p{P}\s]/gu, "");
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang = "sv-SE";
+  utt.rate = 0.9;
+  utt.pitch = 1.0;
+  utt.onend = () => {};
+  utt.onerror = () => {};
+  synthRef.current?.speak(utt);
+};
 
   const handleAsk = async () => {
     // Om redan lyssnar — avbryt
