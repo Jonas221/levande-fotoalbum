@@ -9,6 +9,8 @@ import {
   getPhotoUrls,
 } from "./supabase.js";
 
+const ASK_FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-about-photo`;
+
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap');
 
@@ -241,6 +243,39 @@ html, body {
 }
 .btn-play:active { background: #9d7e2e; }
 .btn-play.playing { background: #5a4a35; }
+.btn-ask {
+  flex: 1;
+  padding: 18px;
+  background: #2a4a3a;
+  color: #7fcfaa;
+  border: 2px solid #3a6a50;
+  border-radius: 16px;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-ask:active { background: #1a3a2a; }
+.btn-ask.listening {
+  background: #3a1a1a;
+  border-color: #c0392b;
+  color: #e74c3c;
+  animation: pulse 1s ease-in-out infinite;
+}
+.btn-ask.thinking {
+  background: #2a2a1a;
+  border-color: #b8973a;
+  color: #b8973a;
+  opacity: 0.8;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
 .btn-close {
   padding: 18px 22px;
   background: #2a2010;
@@ -255,6 +290,25 @@ html, body {
   font-size: 15px;
   color: #5a4a50;
   margin-top: 12px;
+}
+
+/* FRÅGE-SVAR BUBBLA */
+.answer-bubble {
+  background: #1a2a20;
+  border: 1px solid #3a6a50;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #a0dfb8;
+  line-height: 1.5;
+  font-family: 'Playfair Display', serif;
+}
+.answer-question {
+  font-size: 14px;
+  color: #5a8a6a;
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
 }
 
 /* EMPTY */
@@ -285,6 +339,7 @@ html, body {
   .gallery { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 32px; }
   .viewer-description { font-size: 26px; }
   .btn-play { font-size: 26px; padding: 22px; }
+  .btn-ask { font-size: 26px; padding: 22px; }
 }
 `;
 
@@ -302,7 +357,12 @@ export default function ViewerApp() {
   const [authLoading, setAuthLoading] = useState(false);
 
   const [speaking, setSpeaking] = useState(false);
+  const [askState, setAskState] = useState("idle"); // idle | listening | thinking
+  const [lastQuestion, setLastQuestion] = useState("");
+  const [lastAnswer, setLastAnswer] = useState("");
+
   const synthRef = useRef(window.speechSynthesis);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     const unsub = onAuthChange(async (s) => {
@@ -324,7 +384,10 @@ export default function ViewerApp() {
   }, []);
 
   useEffect(() => {
-    return () => { synthRef.current?.cancel(); };
+    return () => {
+      synthRef.current?.cancel();
+      recognitionRef.current?.abort();
+    };
   }, []);
 
   const handleLogin = async (e) => {
@@ -338,6 +401,7 @@ export default function ViewerApp() {
 
   const handleSignOut = async () => {
     synthRef.current?.cancel();
+    recognitionRef.current?.abort();
     await signOut();
     setSession(null);
     setFamily(null);
@@ -347,25 +411,41 @@ export default function ViewerApp() {
 
   const openPhoto = (index) => {
     synthRef.current?.cancel();
+    recognitionRef.current?.abort();
     setSpeaking(false);
+    setAskState("idle");
+    setLastQuestion("");
+    setLastAnswer("");
     setSelectedIndex(index);
   };
 
   const closePhoto = () => {
     synthRef.current?.cancel();
+    recognitionRef.current?.abort();
     setSpeaking(false);
+    setAskState("idle");
+    setLastQuestion("");
+    setLastAnswer("");
     setSelectedIndex(null);
   };
 
   const goNext = () => {
     synthRef.current?.cancel();
+    recognitionRef.current?.abort();
     setSpeaking(false);
+    setAskState("idle");
+    setLastQuestion("");
+    setLastAnswer("");
     setSelectedIndex((i) => (i + 1) % photos.length);
   };
 
   const goPrev = () => {
     synthRef.current?.cancel();
+    recognitionRef.current?.abort();
     setSpeaking(false);
+    setAskState("idle");
+    setLastQuestion("");
+    setLastAnswer("");
     setSelectedIndex((i) => (i - 1 + photos.length) % photos.length);
   };
 
@@ -386,6 +466,94 @@ export default function ViewerApp() {
     utt.onerror = () => setSpeaking(false);
     synthRef.current?.speak(utt);
     setSpeaking(true);
+  };
+
+  const speakAnswer = (text) => {
+    synthRef.current?.cancel();
+    setSpeaking(false);
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = "sv-SE";
+    utt.rate = 0.9;
+    utt.pitch = 1.0;
+    utt.onend = () => {};
+    utt.onerror = () => {};
+    synthRef.current?.speak(utt);
+  };
+
+  const handleAsk = async () => {
+    // Om redan lyssnar — avbryt
+    if (askState === "listening") {
+      recognitionRef.current?.abort();
+      setAskState("idle");
+      return;
+    }
+    // Om tänker — gör ingenting
+    if (askState === "thinking") return;
+
+    // Kolla att webbläsaren stöder taligenkänning
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Din webbläsare stöder inte röstinmatning. Prova Safari på iPad.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.lang = "sv-SE";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => setAskState("listening");
+
+    recognition.onresult = async (event) => {
+      const question = event.results[0][0].transcript;
+      setLastQuestion(question);
+      setLastAnswer("");
+      setAskState("thinking");
+
+      try {
+        const photo = photos[selectedIndex];
+        const { data: sessionData } = await import("./supabase.js").then(m => m.supabase.auth.getSession());
+        const token = sessionData?.session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        const res = await fetch(ASK_FN_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({
+            storagePath: photo.storage_path,
+            question,
+            photoContext: {
+              description: photo.ai_description || photo.description || "",
+              location: photo.location || "",
+              year: photo.year || "",
+              persons: photo.persons || "",
+            },
+          }),
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        setLastAnswer(data.answer);
+        speakAnswer(data.answer);
+      } catch (err) {
+        setLastAnswer("Något gick fel. Försök igen.");
+      }
+      setAskState("idle");
+    };
+
+    recognition.onerror = (event) => {
+      if (event.error !== "aborted") {
+        setLastAnswer("Kunde inte höra frågan. Försök igen.");
+      }
+      setAskState("idle");
+    };
+
+    recognition.onend = () => {
+      if (askState === "listening") setAskState("idle");
+    };
+
+    recognition.start();
   };
 
   if (loading) return (
@@ -481,9 +649,23 @@ export default function ViewerApp() {
                 {[selectedPhoto.location, selectedPhoto.year].filter(Boolean).join(" · ")}
               </div>
             )}
+
+            {lastAnswer && (
+              <div className="answer-bubble">
+                {lastQuestion && <div className="answer-question">❓ {lastQuestion}</div>}
+                {lastAnswer}
+              </div>
+            )}
+
             <div className="viewer-controls">
               <button className={"btn-play" + (speaking ? " playing" : "")} onClick={handleSpeak}>
                 {speaking ? "⏹ Stoppa" : "▶ Läs upp"}
+              </button>
+              <button
+                className={"btn-ask" + (askState === "listening" ? " listening" : askState === "thinking" ? " thinking" : "")}
+                onClick={handleAsk}
+              >
+                {askState === "listening" ? "🔴 Lyssnar..." : askState === "thinking" ? "⏳ Tänker..." : "🎤 Fråga"}
               </button>
               <button className="btn-close" onClick={closePhoto}>✕</button>
             </div>
