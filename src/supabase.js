@@ -131,7 +131,7 @@ export async function getPhotoUrls(storagePaths) {
  * @param {File} file          - Filen från input/drop
  * @param {string} familyId    - Hämtas från getMyFamily()
  */
-export async function uploadPhoto(file, familyId) {
+export async function uploadPhoto(file, familyId, context = {}) {
   // 1. Generera unikt filnamn
   const ext = file.name.split(".").pop().toLowerCase();
   const photoId = crypto.randomUUID();
@@ -150,9 +150,12 @@ export async function uploadPhoto(file, familyId) {
   const { data, error: dbError } = await supabase
     .from("photos")
     .insert({
-      family_id: familyId,
-      filename: file.name,
-      storage_path: storagePath,
+       family_id: familyId,
+  filename: file.name,
+  storage_path: storagePath,
+  location: context.location || "",
+  year: context.year || "",
+  notes: context.notes || "",
     })
     .select()
     .single();
@@ -192,10 +195,10 @@ export async function saveAiResult(photoId, aiResult) {
   const { data, error } = await supabase
     .from("photos")
     .update({
-      ai_description: aiResult.beskrivning,
-      ai_place: aiResult.plats,
-      ai_year: aiResult.tidsepok,
-      ai_keywords: aiResult.nyckelord,
+    ai_description: aiResult.description || aiResult.beskrivning,
+ai_place: aiResult.location || aiResult.plats,
+ai_year: aiResult.era || aiResult.tidsepok,
+ai_keywords: aiResult.keywords || aiResult.nyckelord,
       ai_analyzed_at: new Date().toISOString(),
     })
     .eq("id", photoId)
