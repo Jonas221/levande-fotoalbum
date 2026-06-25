@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Rösttest</h1>
+<button onclick="listVoices()">Visa röster</button>
+<button onclick="testSpeak()">Testa tal</button>
+<div id="out" style="font-size:14px; margin-top:20px;"></div>
+<script>
+function listVoices() {
+  const voices = speechSynthesis.getVoices();
+  const swedish = voices.filter(v => v.lang.startsWith("sv"));
+  const all = voices.map(v => v.name + " / " + v.lang + (v.localService ? " [lokal]" : "")).join("<br>");
+  document.getElementById("out").innerHTML = 
+    "<b>Svenska röster (" + swedish.length + "):</b><br>" +
+    swedish.map(v => v.name + " / " + v.lang).join("<br>") +
+    "<br><br><b>Alla röster (" + voices.length + "):</b><br>" + all;
+}
+function testSpeak() {
+  const voices = speechSynthesis.getVoices();
+  const swedish = voices.filter(v => v.lang.startsWith("sv"));
+  document.getElementById("out").innerHTML = "Hittade " + swedish.length + " svenska röster";
+  swedish.forEach((v, i) => {
+    setTimeout(() => {
+      const utt = new SpeechSynthesisUtterance("Hej, jag heter " + v.name);
+      utt.voice = v;
+      utt.lang = "sv-SE";
+      speechSynthesis.speak(utt);
+    }, i * 3000);
+  });
+}
+</script>
+</body>
+</html>
