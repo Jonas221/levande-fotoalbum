@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html>
-<body>
+<body style="font-size:20px; padding:20px;">
 <h1>Rösttest</h1>
-<button onclick="listVoices()">Visa röster</button>
-<button onclick="testSpeak()">Testa tal</button>
-<div id="out" style="font-size:14px; margin-top:20px;"></div>
+<button onclick="listVoices()" style="font-size:20px; padding:16px; margin:8px;">Visa röster</button>
+<button onclick="testMic()" style="font-size:20px; padding:16px; margin:8px;">Testa mikrofon</button>
+<div id="out" style="margin-top:20px; line-height:1.8;"></div>
 <script>
-function listVoices() {
-  const voices = speechSynthesis.getVoices();
-  const swedish = voices.filter(v => v.lang.startsWith("sv"));
-  const all = voices.map(v => v.name + " / " + v.lang + (v.localService ? " [lokal]" : "")).join("<br>");
-  document.getElementById("out").innerHTML = 
-    "<b>Svenska röster (" + swedish.length + "):</b><br>" +
-    swedish.map(v => v.name + " / " + v.lang).join("<br>") +
-    "<br><br><b>Alla röster (" + voices.length + "):</b><br>" + all;
+function log(msg) {
+  document.getElementById("out").innerHTML += msg + "<br>";
 }
-function testSpeak() {
+
+function listVoices() {
+  document.getElementById("out").innerHTML = "";
   const voices = speechSynthesis.getVoices();
-  const swedish = voices.filter(v => v.lang.startsWith("sv"));
-  document.getElementById("out").innerHTML = "Hittade " + swedish.length + " svenska röster";
-  swedish.forEach((v, i) => {
-    setTimeout(() => {
-      const utt = new SpeechSynthesisUtterance("Hej, jag heter " + v.name);
-      utt.voice = v;
-      utt.lang = "sv-SE";
-      speechSynthesis.speak(utt);
-    }, i * 3000);
-  });
+  log("Antal röster: " + voices.length);
+  voices.filter(v => v.lang.startsWith("sv")).forEach(v => log("SV: " + v.name + " / " + v.lang));
+  log("SpeechRecognition: " + !!(window.SpeechRecognition || window.webkitSpeechRecognition));
+}
+
+function testMic() {
+  document.getElementById("out").innerHTML = "";
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { log("STÖDS INTE av denna webbläsare"); return; }
+  log("Startar lyssnande...");
+  const r = new SR();
+  r.lang = "sv-SE";
+  r.interimResults = false;
+  r.onstart = () => log("✓ Lyssnar nu — säg något!");
+  r.onresult = (e) => log("✓ Hörde: " + e.results[0][0].transcript);
+  r.onerror = (e) => log("✗ Fel: " + e.error);
+  r.onend = () => log("Slut.");
+  r.start();
 }
 </script>
 </body>
