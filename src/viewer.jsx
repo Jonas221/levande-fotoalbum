@@ -276,6 +276,11 @@ export default function ViewerApp() {
     }
     if (askState === "thinking") return;
 
+    // Lås upp ljuduppspelning på iOS genom att spela ett tomt ljud direkt vid klick
+    const silentUtt = new SpeechSynthesisUtterance(" ");
+    silentUtt.volume = 0;
+    synthRef.current?.speak(silentUtt);
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
