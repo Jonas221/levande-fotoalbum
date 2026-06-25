@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         viewer: 'viewer.html',
+        rosttest: 'rosttest.html',
       },
     },
   },
