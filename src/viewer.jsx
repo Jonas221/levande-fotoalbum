@@ -25,315 +25,67 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* AUTH */
-.auth-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: #1a1410;
-  padding: 24px;
-}
-.auth-box {
-  width: 100%;
-  max-width: 460px;
-  text-align: center;
-}
+.auth-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #1a1410; padding: 24px; }
+.auth-box { width: 100%; max-width: 460px; text-align: center; }
 .auth-icon { font-size: 64px; margin-bottom: 20px; }
-.auth-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 36px;
-  color: #f5f0e8;
-  margin-bottom: 8px;
-  line-height: 1.2;
-}
-.auth-subtitle {
-  font-size: 20px;
-  color: #a09080;
-  margin-bottom: 48px;
-}
+.auth-title { font-family: 'Playfair Display', serif; font-size: 36px; color: #f5f0e8; margin-bottom: 8px; line-height: 1.2; }
+.auth-subtitle { font-size: 20px; color: #a09080; margin-bottom: 48px; }
 .auth-field { margin-bottom: 20px; text-align: left; }
-.auth-field label {
-  display: block;
-  font-size: 18px;
-  color: #c8b896;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-.auth-field input {
-  width: 100%;
-  padding: 20px 24px;
-  border: 2px solid #3a2e20;
-  border-radius: 16px;
-  font-size: 22px;
-  background: #2a2010;
-  color: #f5f0e8;
-  outline: none;
-  font-family: 'Inter', sans-serif;
-}
+.auth-field label { display: block; font-size: 18px; color: #c8b896; margin-bottom: 10px; font-weight: 500; }
+.auth-field input { width: 100%; padding: 20px 24px; border: 2px solid #3a2e20; border-radius: 16px; font-size: 22px; background: #2a2010; color: #f5f0e8; outline: none; font-family: 'Inter', sans-serif; }
 .auth-field input:focus { border-color: #b8973a; }
-.btn-login {
-  width: 100%;
-  padding: 22px;
-  background: #b8973a;
-  color: #fff;
-  border: none;
-  border-radius: 16px;
-  font-size: 24px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-  font-family: 'Inter', sans-serif;
-}
+.btn-login { width: 100%; padding: 22px; background: #b8973a; color: #fff; border: none; border-radius: 16px; font-size: 24px; font-weight: 600; cursor: pointer; margin-top: 8px; font-family: 'Inter', sans-serif; }
 .btn-login:active { background: #9d7e2e; }
-.auth-error {
-  background: rgba(192,57,43,0.2);
-  border: 1px solid rgba(192,57,43,0.4);
-  color: #e74c3c;
-  border-radius: 12px;
-  padding: 16px;
-  font-size: 18px;
-  margin-bottom: 20px;
-}
+.auth-error { background: rgba(192,57,43,0.2); border: 1px solid rgba(192,57,43,0.4); color: #e74c3c; border-radius: 12px; padding: 16px; font-size: 18px; margin-bottom: 20px; }
 
-/* HEADER */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  background: #1a1410;
-  border-bottom: 1px solid #2a2010;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.header-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px;
-  color: #f5f0e8;
-}
-.header-family {
-  font-size: 16px;
-  color: #a09080;
-  margin-top: 2px;
-}
-.btn-signout {
-  background: none;
-  border: 2px solid #3a2e20;
-  border-radius: 12px;
-  padding: 10px 18px;
-  font-size: 16px;
-  color: #a09080;
-  cursor: pointer;
-}
+.header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; background: #1a1410; border-bottom: 1px solid #2a2010; position: sticky; top: 0; z-index: 10; }
+.header-title { font-family: 'Playfair Display', serif; font-size: 24px; color: #f5f0e8; }
+.header-family { font-size: 16px; color: #a09080; margin-top: 2px; }
+.btn-signout { background: none; border: 2px solid #3a2e20; border-radius: 12px; padding: 10px 18px; font-size: 16px; color: #a09080; cursor: pointer; }
 
-/* GALLERY */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  padding: 24px;
-}
-.gallery-card {
-  border-radius: 16px;
-  overflow: hidden;
-  background: #2a2010;
-  cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 2px solid transparent;
-}
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; padding: 24px; }
+.gallery-card { border-radius: 16px; overflow: hidden; background: #2a2010; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 2px solid transparent; }
 .gallery-card:active { transform: scale(0.97); }
-.gallery-card img {
-  width: 100%;
-  aspect-ratio: 4/3;
-  object-fit: cover;
-  display: block;
-}
-.gallery-card-label {
-  padding: 14px 16px;
-  font-size: 17px;
-  color: #c8b896;
-  line-height: 1.3;
-}
-.gallery-card-year {
-  font-size: 14px;
-  color: #7a6a50;
-  margin-top: 4px;
-}
+.gallery-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+.gallery-card-label { padding: 14px 16px; font-size: 17px; color: #c8b896; line-height: 1.3; }
+.gallery-card-year { font-size: 14px; color: #7a6a50; margin-top: 4px; }
 
-/* FULLSCREEN VIEWER */
-.viewer {
-  position: fixed;
-  inset: 0;
-  background: #0d0b08;
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-}
-.viewer-photo-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-.viewer-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-.viewer-nav-left, .viewer-nav-right {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  border: none;
-  color: #f5f0e8;
-  font-size: 36px;
-  padding: 20px 16px;
-  cursor: pointer;
-  border-radius: 12px;
-  z-index: 10;
-}
+.viewer { position: fixed; inset: 0; background: #0d0b08; display: flex; flex-direction: column; z-index: 100; }
+.viewer-photo-wrap { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+.viewer-photo { width: 100%; height: 100%; object-fit: contain; display: block; }
+.viewer-nav-left, .viewer-nav-right { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: none; color: #f5f0e8; font-size: 36px; padding: 20px 16px; cursor: pointer; border-radius: 12px; z-index: 10; }
 .viewer-nav-left { left: 12px; }
 .viewer-nav-right { right: 12px; }
-
-.viewer-bottom {
-  background: linear-gradient(to top, #0d0b08, #13100c);
-  padding: 20px 24px 32px;
-  border-top: 1px solid #2a2010;
-}
-.viewer-description {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  color: #f5f0e8;
-  line-height: 1.5;
-  margin-bottom: 8px;
-  min-height: 60px;
-}
-.viewer-meta {
-  font-size: 16px;
-  color: #7a6a50;
-  margin-bottom: 20px;
-}
-.viewer-controls {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.btn-play {
-  flex: 1;
-  padding: 18px;
-  background: #b8973a;
-  color: #fff;
-  border: none;
-  border-radius: 16px;
-  font-size: 22px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
+.viewer-bottom { background: linear-gradient(to top, #0d0b08, #13100c); padding: 20px 24px 32px; border-top: 1px solid #2a2010; }
+.viewer-description { font-family: 'Playfair Display', serif; font-size: 22px; color: #f5f0e8; line-height: 1.5; margin-bottom: 8px; min-height: 60px; }
+.viewer-meta { font-size: 16px; color: #7a6a50; margin-bottom: 20px; }
+.viewer-controls { display: flex; gap: 12px; align-items: center; }
+.btn-play { flex: 1; padding: 18px; background: #b8973a; color: #fff; border: none; border-radius: 16px; font-size: 22px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-play:active { background: #9d7e2e; }
 .btn-play.playing { background: #5a4a35; }
-.btn-ask {
-  flex: 1;
-  padding: 18px;
-  background: #2a4a3a;
-  color: #7fcfaa;
-  border: 2px solid #3a6a50;
-  border-radius: 16px;
-  font-size: 22px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
+.btn-ask { flex: 1; padding: 18px; background: #2a4a3a; color: #7fcfaa; border: 2px solid #3a6a50; border-radius: 16px; font-size: 22px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-ask:active { background: #1a3a2a; }
-.btn-ask.listening {
-  background: #3a1a1a;
-  border-color: #c0392b;
-  color: #e74c3c;
-  animation: pulse 1s ease-in-out infinite;
-}
-.btn-ask.thinking {
-  background: #2a2a1a;
-  border-color: #b8973a;
-  color: #b8973a;
-  opacity: 0.8;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-.btn-close {
-  padding: 18px 22px;
-  background: #2a2010;
-  border: 2px solid #3a2e20;
-  border-radius: 16px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #f5f0e8;
-}
-.viewer-counter {
-  text-align: center;
-  font-size: 15px;
-  color: #5a4a50;
-  margin-top: 12px;
-}
+.btn-ask.listening { background: #3a1a1a; border-color: #c0392b; color: #e74c3c; animation: pulse 1s ease-in-out infinite; }
+.btn-ask.thinking { background: #2a2a1a; border-color: #b8973a; color: #b8973a; opacity: 0.8; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.btn-close { padding: 18px 22px; background: #2a2010; border: 2px solid #3a2e20; border-radius: 16px; font-size: 24px; cursor: pointer; color: #f5f0e8; }
+.viewer-counter { text-align: center; font-size: 15px; color: #5a4a50; margin-top: 12px; }
 
-/* FRÅGE-SVAR BUBBLA */
-.answer-bubble {
-  background: #1a2a20;
-  border: 1px solid #3a6a50;
-  border-radius: 16px;
-  padding: 16px 20px;
-  margin-bottom: 16px;
-  font-size: 20px;
-  color: #a0dfb8;
-  line-height: 1.5;
-  font-family: 'Playfair Display', serif;
-}
-.answer-question {
-  font-size: 14px;
-  color: #5a8a6a;
-  margin-bottom: 8px;
-  font-family: 'Inter', sans-serif;
-}
+.answer-bubble { background: #1a2a20; border: 1px solid #3a6a50; border-radius: 16px; padding: 16px 20px; margin-bottom: 16px; font-size: 20px; color: #a0dfb8; line-height: 1.5; font-family: 'Playfair Display', serif; }
+.answer-question { font-size: 14px; color: #5a8a6a; margin-bottom: 8px; font-family: 'Inter', sans-serif; }
 
-/* EMPTY */
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  color: #5a4a50;
-  text-align: center;
-  padding: 40px;
-}
+.text-ask-wrap { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
+.text-ask-input { flex: 1; padding: 16px 18px; border: 2px solid #3a6a50; border-radius: 16px; font-size: 20px; background: #1a2a20; color: #f5f0e8; outline: none; font-family: 'Inter', sans-serif; }
+.text-ask-input:focus { border-color: #7fcfaa; }
+.text-ask-input::placeholder { color: #4a6a5a; }
+.btn-text-send { padding: 16px 20px; background: #2a4a3a; color: #7fcfaa; border: 2px solid #3a6a50; border-radius: 16px; font-size: 22px; cursor: pointer; }
+.btn-text-send:active { background: #1a3a2a; }
+.btn-text-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; color: #5a4a50; text-align: center; padding: 40px; }
 .empty-icon { font-size: 64px; margin-bottom: 16px; }
 .empty-text { font-size: 22px; }
-
-/* LOADING */
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  font-size: 22px;
-  color: #7a6a50;
-}
+.loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-size: 22px; color: #7a6a50; }
 
 @media (min-width: 768px) {
   .gallery { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 32px; }
@@ -343,6 +95,20 @@ html, body {
 }
 `;
 
+// Välj bästa svenska röst — prioriterar manlig
+function pickSwedishVoice(synth) {
+  const voices = synth.getVoices();
+  const swedish = voices.filter(v => v.lang.startsWith("sv"));
+  if (swedish.length === 0) return null;
+  const male = swedish.find(v =>
+    v.name.toLowerCase().includes("oskar") ||
+    v.name.toLowerCase().includes("erik") ||
+    v.name.toLowerCase().includes("magnus") ||
+    v.name.toLowerCase().includes("male")
+  );
+  return male || swedish[0];
+}
+
 export default function ViewerApp() {
   const [session, setSession] = useState(null);
   const [family, setFamily] = useState(null);
@@ -350,19 +116,26 @@ export default function ViewerApp() {
   const [photoUrls, setPhotoUrls] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(null);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
-
   const [speaking, setSpeaking] = useState(false);
-  const [askState, setAskState] = useState("idle"); // idle | listening | thinking
+  const [askState, setAskState] = useState("idle");
   const [lastQuestion, setLastQuestion] = useState("");
   const [lastAnswer, setLastAnswer] = useState("");
+  const [useTextFallback, setUseTextFallback] = useState(false);
+  const [textQuestion, setTextQuestion] = useState("");
 
   const synthRef = useRef(window.speechSynthesis);
   const recognitionRef = useRef(null);
+  const voiceRef = useRef(null);
+
+  useEffect(() => {
+    const loadVoices = () => { voiceRef.current = pickSwedishVoice(synthRef.current); };
+    loadVoices();
+    synthRef.current.onvoiceschanged = loadVoices;
+  }, []);
 
   useEffect(() => {
     const unsub = onAuthChange(async (s) => {
@@ -384,10 +157,7 @@ export default function ViewerApp() {
   }, []);
 
   useEffect(() => {
-    return () => {
-      synthRef.current?.cancel();
-      recognitionRef.current?.abort();
-    };
+    return () => { synthRef.current?.cancel(); recognitionRef.current?.abort(); };
   }, []);
 
   const handleLogin = async (e) => {
@@ -403,170 +173,127 @@ export default function ViewerApp() {
     synthRef.current?.cancel();
     recognitionRef.current?.abort();
     await signOut();
-    setSession(null);
-    setFamily(null);
-    setPhotos([]);
-    setSelectedIndex(null);
+    setSession(null); setFamily(null); setPhotos([]); setSelectedIndex(null);
+  };
+
+  const resetAskState = () => {
+    setAskState("idle"); setLastQuestion(""); setLastAnswer(""); setTextQuestion("");
   };
 
   const openPhoto = (index) => {
-    synthRef.current?.cancel();
-    recognitionRef.current?.abort();
-    setSpeaking(false);
-    setAskState("idle");
-    setLastQuestion("");
-    setLastAnswer("");
-    setSelectedIndex(index);
+    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    setSpeaking(false); resetAskState(); setSelectedIndex(index);
   };
 
   const closePhoto = () => {
-    synthRef.current?.cancel();
-    recognitionRef.current?.abort();
-    setSpeaking(false);
-    setAskState("idle");
-    setLastQuestion("");
-    setLastAnswer("");
-    setSelectedIndex(null);
+    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    setSpeaking(false); resetAskState(); setSelectedIndex(null);
   };
 
   const goNext = () => {
-    synthRef.current?.cancel();
-    recognitionRef.current?.abort();
-    setSpeaking(false);
-    setAskState("idle");
-    setLastQuestion("");
-    setLastAnswer("");
+    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    setSpeaking(false); resetAskState();
     setSelectedIndex((i) => (i + 1) % photos.length);
   };
 
   const goPrev = () => {
-    synthRef.current?.cancel();
-    recognitionRef.current?.abort();
-    setSpeaking(false);
-    setAskState("idle");
-    setLastQuestion("");
-    setLastAnswer("");
+    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    setSpeaking(false); resetAskState();
     setSelectedIndex((i) => (i - 1 + photos.length) % photos.length);
   };
 
-  const handleSpeak = () => {
-    if (speaking) {
-      synthRef.current?.cancel();
-      setSpeaking(false);
-      return;
-    }
-    const photo = photos[selectedIndex];
-    const text = photo.ai_description || photo.description || "";
-    if (!text) return;
-    const utt = new SpeechSynthesisUtterance(text);
+  const buildUtterance = (text) => {
+    const clean = text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/[^\p{L}\p{N}\p{P}\s]/gu, "");
+    const utt = new SpeechSynthesisUtterance(clean);
     utt.lang = "sv-SE";
     utt.rate = 0.9;
     utt.pitch = 1.0;
+    if (voiceRef.current) utt.voice = voiceRef.current;
+    return utt;
+  };
+
+  const handleSpeak = () => {
+    if (speaking) { synthRef.current?.cancel(); setSpeaking(false); return; }
+    const photo = photos[selectedIndex];
+    const text = photo.ai_description || photo.description || "";
+    if (!text) return;
+    const utt = buildUtterance(text);
     utt.onend = () => setSpeaking(false);
     utt.onerror = () => setSpeaking(false);
     synthRef.current?.speak(utt);
     setSpeaking(true);
   };
 
-const speakAnswer = (text) => {
-  synthRef.current?.cancel();
-  setSpeaking(false);
-  // Strippa markdown och emojis
-  const clean = text
-    .replace(/\*\*(.*?)\*\*/g, "$1")
-    .replace(/\*(.*?)\*/g, "$1")
-    .replace(/[^\p{L}\p{N}\p{P}\s]/gu, "");
-  const utt = new SpeechSynthesisUtterance(clean);
-  utt.lang = "sv-SE";
-  utt.rate = 0.9;
-  utt.pitch = 1.0;
-  utt.onend = () => {};
-  utt.onerror = () => {};
-  synthRef.current?.speak(utt);
-};
+  const speakAnswer = (text) => {
+    const utt = buildUtterance(text);
+    synthRef.current?.speak(utt);
+  };
+
+  const sendQuestion = async (question) => {
+    setLastQuestion(question); setLastAnswer(""); setAskState("thinking");
+    try {
+      const photo = photos[selectedIndex];
+      const { data: sessionData } = await import("./supabase.js").then(m => m.supabase.auth.getSession());
+      const token = sessionData?.session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const res = await fetch(ASK_FN_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({
+          storagePath: photo.storage_path,
+          question,
+          photoContext: {
+            description: photo.ai_description || photo.description || "",
+            location: photo.location || "",
+            year: photo.year || "",
+            persons: photo.persons || "",
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setLastAnswer(data.answer);
+      speakAnswer(data.answer);
+    } catch {
+      setLastAnswer("Något gick fel. Försök igen.");
+    }
+    setAskState("idle");
+  };
 
   const handleAsk = async () => {
-    // Om redan lyssnar — avbryt
-    if (askState === "listening") {
-      recognitionRef.current?.abort();
-      setAskState("idle");
-      return;
-    }
-    // Om tänker — gör ingenting
+    if (askState === "listening") { recognitionRef.current?.abort(); setAskState("idle"); return; }
     if (askState === "thinking") return;
 
-    // Kolla att webbläsaren stöder taligenkänning
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Din webbläsare stöder inte röstinmatning. Prova Safari på iPad.");
-      return;
-    }
+    if (!SpeechRecognition) { setUseTextFallback(true); return; }
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     recognition.lang = "sv-SE";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
-
     recognition.onstart = () => setAskState("listening");
-
     recognition.onresult = async (event) => {
-      const question = event.results[0][0].transcript;
-      setLastQuestion(question);
-      setLastAnswer("");
-      setAskState("thinking");
-
-      try {
-        const photo = photos[selectedIndex];
-        const { data: sessionData } = await import("./supabase.js").then(m => m.supabase.auth.getSession());
-        const token = sessionData?.session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-        const res = await fetch(ASK_FN_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-          body: JSON.stringify({
-            storagePath: photo.storage_path,
-            question,
-            photoContext: {
-              description: photo.ai_description || photo.description || "",
-              location: photo.location || "",
-              year: photo.year || "",
-              persons: photo.persons || "",
-            },
-          }),
-        });
-
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-
-        setLastAnswer(data.answer);
-        speakAnswer(data.answer);
-      } catch (err) {
-        setLastAnswer("Något gick fel. Försök igen.");
-      }
-      setAskState("idle");
+      await sendQuestion(event.results[0][0].transcript);
     };
-
     recognition.onerror = (event) => {
-      if (event.error !== "aborted") {
-        setLastAnswer("Kunde inte höra frågan. Försök igen.");
-      }
+      if (event.error !== "aborted") setUseTextFallback(true);
       setAskState("idle");
     };
-
-    recognition.onend = () => {
-      if (askState === "listening") setAskState("idle");
-    };
-
+    recognition.onend = () => { if (askState === "listening") setAskState("idle"); };
     recognition.start();
   };
 
-  if (loading) return (
-    <>
-      <style>{STYLES}</style>
-      <div className="loading">Laddar albumet...</div>
-    </>
-  );
+  const handleTextSend = async () => {
+    const q = textQuestion.trim();
+    if (!q || askState === "thinking") return;
+    setTextQuestion("");
+    await sendQuestion(q);
+  };
+
+  if (loading) return (<><style>{STYLES}</style><div className="loading">Laddar albumet...</div></>);
 
   if (!session) return (
     <>
@@ -578,17 +305,9 @@ const speakAnswer = (text) => {
           <div className="auth-subtitle">Logga in för att se dina foton</div>
           {authError && <div className="auth-error">{authError}</div>}
           <form onSubmit={handleLogin}>
-            <div className="auth-field">
-              <label>E-post</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
-            </div>
-            <div className="auth-field">
-              <label>Lösenord</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
-            </div>
-            <button type="submit" className="btn-login" disabled={authLoading}>
-              {authLoading ? "Loggar in..." : "Logga in"}
-            </button>
+            <div className="auth-field"><label>E-post</label><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" /></div>
+            <div className="auth-field"><label>Lösenord</label><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" /></div>
+            <button type="submit" className="btn-login" disabled={authLoading}>{authLoading ? "Loggar in..." : "Logga in"}</button>
           </form>
         </div>
       </div>
@@ -600,7 +319,6 @@ const speakAnswer = (text) => {
   return (
     <>
       <style>{STYLES}</style>
-
       <div className="header">
         <div>
           <div className="header-title">📷 Mitt album</div>
@@ -610,10 +328,7 @@ const speakAnswer = (text) => {
       </div>
 
       {photos.length === 0 ? (
-        <div className="empty">
-          <div className="empty-icon">🖼️</div>
-          <div className="empty-text">Inga foton ännu</div>
-        </div>
+        <div className="empty"><div className="empty-icon">🖼️</div><div className="empty-text">Inga foton ännu</div></div>
       ) : (
         <div className="gallery">
           {photos.map((photo, i) => (
@@ -638,10 +353,7 @@ const speakAnswer = (text) => {
               <img className="viewer-photo" src={photoUrls[selectedPhoto.storage_path]} alt={selectedPhoto.description || selectedPhoto.filename} />
             )}
             {photos.length > 1 && (
-              <>
-                <button className="viewer-nav-left" onClick={goPrev}>‹</button>
-                <button className="viewer-nav-right" onClick={goNext}>›</button>
-              </>
+              <><button className="viewer-nav-left" onClick={goPrev}>‹</button><button className="viewer-nav-right" onClick={goNext}>›</button></>
             )}
           </div>
 
@@ -650,15 +362,30 @@ const speakAnswer = (text) => {
               {selectedPhoto.ai_description || selectedPhoto.description || "Ingen beskrivning"}
             </div>
             {(selectedPhoto.location || selectedPhoto.year) && (
-              <div className="viewer-meta">
-                {[selectedPhoto.location, selectedPhoto.year].filter(Boolean).join(" · ")}
-              </div>
+              <div className="viewer-meta">{[selectedPhoto.location, selectedPhoto.year].filter(Boolean).join(" · ")}</div>
             )}
 
             {lastAnswer && (
               <div className="answer-bubble">
                 {lastQuestion && <div className="answer-question">❓ {lastQuestion}</div>}
                 {lastAnswer}
+              </div>
+            )}
+
+            {useTextFallback && (
+              <div className="text-ask-wrap">
+                <input
+                  className="text-ask-input"
+                  value={textQuestion}
+                  onChange={(e) => setTextQuestion(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleTextSend()}
+                  placeholder="Skriv din fråga här..."
+                  disabled={askState === "thinking"}
+                  autoFocus
+                />
+                <button className="btn-text-send" onClick={handleTextSend} disabled={!textQuestion.trim() || askState === "thinking"}>
+                  {askState === "thinking" ? "⏳" : "➤"}
+                </button>
               </div>
             )}
 
@@ -674,9 +401,7 @@ const speakAnswer = (text) => {
               </button>
               <button className="btn-close" onClick={closePhoto}>✕</button>
             </div>
-            {photos.length > 1 && (
-              <div className="viewer-counter">{selectedIndex + 1} / {photos.length}</div>
-            )}
+            {photos.length > 1 && <div className="viewer-counter">{selectedIndex + 1} / {photos.length}</div>}
           </div>
         </div>
       )}
