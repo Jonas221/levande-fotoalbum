@@ -321,8 +321,8 @@ export default function ViewerApp() {
             return;
           }
           await sendQuestion(data.transcript);
-        } catch {
-          setLastAnswer("Något gick fel. Försök igen.");
+        } catch (err) {
+          setLastAnswer("Fel: " + (err instanceof Error ? err.message : String(err)));
           setAskState("idle");
         }
       };
