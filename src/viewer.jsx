@@ -10,6 +10,7 @@ import {
 } from "./supabase.js";
 
 const ASK_FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-about-photo`;
+const TRANSCRIBE_FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`;
 
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap');
@@ -95,7 +96,6 @@ html, body {
 }
 `;
 
-// Välj bästa svenska röst — prioriterar manlig
 function pickSwedishVoice(synth) {
   const voices = synth.getVoices();
   const swedish = voices.filter(v => v.lang.startsWith("sv"));
@@ -128,8 +128,9 @@ export default function ViewerApp() {
   const [textQuestion, setTextQuestion] = useState("");
 
   const synthRef = useRef(window.speechSynthesis);
-  const recognitionRef = useRef(null);
   const voiceRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   useEffect(() => {
     const loadVoices = () => { voiceRef.current = pickSwedishVoice(synthRef.current); };
@@ -157,7 +158,12 @@ export default function ViewerApp() {
   }, []);
 
   useEffect(() => {
-    return () => { synthRef.current?.cancel(); recognitionRef.current?.abort(); };
+    return () => {
+      synthRef.current?.cancel();
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+    };
   }, []);
 
   const handleLogin = async (e) => {
@@ -171,7 +177,6 @@ export default function ViewerApp() {
 
   const handleSignOut = async () => {
     synthRef.current?.cancel();
-    recognitionRef.current?.abort();
     await signOut();
     setSession(null); setFamily(null); setPhotos([]); setSelectedIndex(null);
   };
@@ -181,23 +186,23 @@ export default function ViewerApp() {
   };
 
   const openPhoto = (index) => {
-    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    synthRef.current?.cancel();
     setSpeaking(false); resetAskState(); setSelectedIndex(index);
   };
 
   const closePhoto = () => {
-    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    synthRef.current?.cancel();
     setSpeaking(false); resetAskState(); setSelectedIndex(null);
   };
 
   const goNext = () => {
-    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    synthRef.current?.cancel();
     setSpeaking(false); resetAskState();
     setSelectedIndex((i) => (i + 1) % photos.length);
   };
 
   const goPrev = () => {
-    synthRef.current?.cancel(); recognitionRef.current?.abort();
+    synthRef.current?.cancel();
     setSpeaking(false); resetAskState();
     setSelectedIndex((i) => (i - 1 + photos.length) % photos.length);
   };
@@ -263,27 +268,71 @@ export default function ViewerApp() {
   };
 
   const handleAsk = async () => {
-    if (askState === "listening") { recognitionRef.current?.abort(); setAskState("idle"); return; }
+    if (askState === "listening") {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        mediaRecorderRef.current.stop();
+      }
+      return;
+    }
     if (askState === "thinking") return;
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setUseTextFallback(true); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
 
-    const recognition = new SpeechRecognition();
-    recognitionRef.current = recognition;
-    recognition.lang = "sv-SE";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.onstart = () => setAskState("listening");
-    recognition.onresult = async (event) => {
-      await sendQuestion(event.results[0][0].transcript);
-    };
-    recognition.onerror = (event) => {
-      if (event.error !== "aborted") setUseTextFallback(true);
-      setAskState("idle");
-    };
-    recognition.onend = () => { if (askState === "listening") setAskState("idle"); };
-    recognition.start();
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" :
+                       MediaRecorder.isTypeSupported("audio/mp4") ? "audio/mp4" : "";
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop());
+        const blob = new Blob(audioChunksRef.current, { type: mimeType || "audio/mp4" });
+
+        if (blob.size < 1000) {
+          setLastAnswer("Inget ljud spelades in. Försök igen.");
+          setAskState("idle");
+          return;
+        }
+
+        setAskState("thinking");
+        try {
+          const { data: sessionData } = await import("./supabase.js").then(m => m.supabase.auth.getSession());
+          const token = sessionData?.session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+          const formData = new FormData();
+          const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+          formData.append("audio", blob, `audio.${ext}`);
+
+          const res = await fetch(TRANSCRIBE_FN_URL, {
+            method: "POST",
+            headers: { Authorization: "Bearer " + token },
+            body: formData,
+          });
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          if (!data.transcript) {
+            setLastAnswer("Kunde inte höra vad du sa. Försök igen.");
+            setAskState("idle");
+            return;
+          }
+          await sendQuestion(data.transcript);
+        } catch {
+          setLastAnswer("Något gick fel. Försök igen.");
+          setAskState("idle");
+        }
+      };
+
+      recorder.start();
+      setAskState("listening");
+
+    } catch {
+      setUseTextFallback(true);
+    }
   };
 
   const handleTextSend = async () => {
@@ -397,7 +446,7 @@ export default function ViewerApp() {
                 className={"btn-ask" + (askState === "listening" ? " listening" : askState === "thinking" ? " thinking" : "")}
                 onClick={handleAsk}
               >
-                {askState === "listening" ? "🔴 Lyssnar..." : askState === "thinking" ? "⏳ Tänker..." : "🎤 Fråga"}
+                {askState === "listening" ? "🔴 Stoppa" : askState === "thinking" ? "⏳ Tänker..." : "🎤 Fråga"}
               </button>
               <button className="btn-close" onClick={closePhoto}>✕</button>
             </div>
