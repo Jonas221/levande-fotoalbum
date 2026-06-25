@@ -289,6 +289,31 @@ export default function ViewerApp() {
         if (e.data.size > 0) audioChunksRef.current.push(e.data);
       };
 
+      // Automatisk stopp vid tystnad (2 sekunder)
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      const dataArray = new Uint8Array(analyser.fftSize);
+      let silenceStart = null;
+      let hasSpoken = false;
+      const silenceTimer = setInterval(() => {
+        analyser.getByteTimeDomainData(dataArray);
+        const volume = dataArray.reduce((sum, v) => sum + Math.abs(v - 128), 0) / dataArray.length;
+        if (volume > 3) {
+          hasSpoken = true;
+          silenceStart = null;
+        } else if (hasSpoken) {
+          if (!silenceStart) silenceStart = Date.now();
+          else if (Date.now() - silenceStart > 2000) {
+            clearInterval(silenceTimer);
+            audioContext.close();
+            if (recorder.state === "recording") recorder.stop();
+          }
+        }
+      }, 100);
+
       recorder.onstop = async () => {
         stream.getTracks().forEach(t => t.stop());
         const blob = new Blob(audioChunksRef.current, { type: mimeType || "audio/mp4" });
